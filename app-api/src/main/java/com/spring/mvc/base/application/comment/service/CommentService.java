@@ -4,7 +4,7 @@ import com.spring.mvc.base.application.comment.dto.request.CommentCreateRequest;
 import com.spring.mvc.base.application.comment.dto.request.CommentUpdateRequest;
 import com.spring.mvc.base.application.comment.dto.response.CommentResponse;
 import com.spring.mvc.base.application.common.dto.response.PageResponse;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.CommentErrorCode;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
 import com.spring.mvc.base.common.exception.code.PostErrorCode;
@@ -74,7 +74,7 @@ public class CommentService {
         ownershipPolicy.validateOwnership(comment.getMember().getId(), requesterId);
 
         Long postId = commentRepository.findPostIdByCommentId(commentId)
-                .orElseThrow(() -> new CustomException(CommentErrorCode.COMMENT_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.COMMENT_NOT_FOUND));
 
         commentRepository.deleteById(comment.getId());
 
@@ -109,17 +109,17 @@ public class CommentService {
 
     private void validatePostExists(Long postId) {
         if (!postRepository.existsById(postId)) {
-            throw new CustomException(PostErrorCode.POST_NOT_FOUND);
+            throw new BusinessException(PostErrorCode.POST_NOT_FOUND);
         }
     }
 
     private Comment findCommentByIdWithMember(Long commentId) {
         return commentRepository.findByIdWithMember(commentId)
-                .orElseThrow(() -> new CustomException(CommentErrorCode.COMMENT_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.COMMENT_NOT_FOUND));
     }
 
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(MemberErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(MemberErrorCode.USER_NOT_FOUND));
     }
 }

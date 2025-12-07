@@ -21,7 +21,7 @@ import com.spring.mvc.base.application.post.dto.response.PostSummaryResponse;
 import com.spring.mvc.base.application.post.service.PostLikeService;
 import com.spring.mvc.base.application.post.service.PostService;
 import com.spring.mvc.base.application.post.service.PostViewService;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.PostErrorCode;
 import com.spring.mvc.base.config.annotation.ControllerWebMvcTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -203,7 +203,7 @@ class PostControllerTest {
     @Test
     @DisplayName("존재하지 않는 게시글 조회 - 404 Not Found")
     void getPost_notFound_returns404() throws Exception {
-        willThrow(new CustomException(PostErrorCode.POST_NOT_FOUND))
+        willThrow(new BusinessException(PostErrorCode.POST_NOT_FOUND))
                 .given(postService).getPostDetails(any(), any());
 
         mockMvc.perform(get("/api/v1/posts/{postId}", 999L))
@@ -215,7 +215,7 @@ class PostControllerTest {
     @Test
     @DisplayName("존재하지 않는 게시글 좋아요 - 404 Not Found")
     void likePost_notFound_returns404() throws Exception {
-        willThrow(new CustomException(PostErrorCode.POST_NOT_FOUND))
+        willThrow(new BusinessException(PostErrorCode.POST_NOT_FOUND))
                 .given(postLikeService).likePost(any(), any());
 
         mockMvc.perform(post("/api/v1/posts/{postId}/like", 999L))
@@ -227,7 +227,7 @@ class PostControllerTest {
     @Test
     @DisplayName("존재하지 않는 게시글 좋아요 취소 - 404 Not Found")
     void unlikePost_notFound_returns404() throws Exception {
-        willThrow(new CustomException(PostErrorCode.POST_NOT_FOUND))
+        willThrow(new BusinessException(PostErrorCode.POST_NOT_FOUND))
                 .given(postLikeService).unlikePost(any(), any());
 
         mockMvc.perform(delete("/api/v1/posts/{postId}/like", 999L))

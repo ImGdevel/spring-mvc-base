@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import com.spring.mvc.base.application.security.util.JwtTokenProvider;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.AuthErrorCode;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
 import com.spring.mvc.base.config.annotation.UnitTest;
@@ -67,8 +67,8 @@ class TokenRefreshServiceTest {
         given(jwtTokenProvider.isRefreshToken(INVALID_TOKEN)).willReturn(false);
 
         assertThatThrownBy(() -> tokenRefreshService.refreshAccessToken(INVALID_TOKEN))
-                .isInstanceOf(CustomException.class)
-                .satisfies(exception -> assertThat(((CustomException) exception).getErrorCode())
+                .isInstanceOf(BusinessException.class)
+                .satisfies(exception -> assertThat(((BusinessException) exception).getErrorCode())
                         .isEqualTo(AuthErrorCode.REFRESH_TOKEN_INVALID));
     }
 
@@ -79,8 +79,8 @@ class TokenRefreshServiceTest {
         given(jwtTokenProvider.isTokenExpired(VALID_REFRESH_TOKEN)).willReturn(true);
 
         assertThatThrownBy(() -> tokenRefreshService.refreshAccessToken(VALID_REFRESH_TOKEN))
-                .isInstanceOf(CustomException.class)
-                .satisfies(exception -> assertThat(((CustomException) exception).getErrorCode())
+                .isInstanceOf(BusinessException.class)
+                .satisfies(exception -> assertThat(((BusinessException) exception).getErrorCode())
                         .isEqualTo(AuthErrorCode.REFRESH_TOKEN_EXPIRED));
     }
 
@@ -93,8 +93,8 @@ class TokenRefreshServiceTest {
         given(memberRepository.findById(999L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> tokenRefreshService.refreshAccessToken(VALID_REFRESH_TOKEN))
-                .isInstanceOf(CustomException.class)
-                .satisfies(exception -> assertThat(((CustomException) exception).getErrorCode())
+                .isInstanceOf(BusinessException.class)
+                .satisfies(exception -> assertThat(((BusinessException) exception).getErrorCode())
                         .isEqualTo(MemberErrorCode.USER_NOT_FOUND));
     }
 
@@ -110,8 +110,8 @@ class TokenRefreshServiceTest {
         given(memberRepository.findById(inactiveMember.getId())).willReturn(Optional.of(inactiveMember));
 
         assertThatThrownBy(() -> tokenRefreshService.refreshAccessToken(VALID_REFRESH_TOKEN))
-                .isInstanceOf(CustomException.class)
-                .satisfies(exception -> assertThat(((CustomException) exception).getErrorCode())
+                .isInstanceOf(BusinessException.class)
+                .satisfies(exception -> assertThat(((BusinessException) exception).getErrorCode())
                         .isEqualTo(MemberErrorCode.MEMBER_INACTIVE));
     }
 
@@ -123,8 +123,8 @@ class TokenRefreshServiceTest {
         given(tokenBlacklistService.isBlacklisted(VALID_REFRESH_TOKEN)).willReturn(true);
 
         assertThatThrownBy(() -> tokenRefreshService.refreshAccessToken(VALID_REFRESH_TOKEN))
-                .isInstanceOf(CustomException.class)
-                .satisfies(exception -> assertThat(((CustomException) exception).getErrorCode())
+                .isInstanceOf(BusinessException.class)
+                .satisfies(exception -> assertThat(((BusinessException) exception).getErrorCode())
                         .isEqualTo(AuthErrorCode.REFRESH_TOKEN_INVALID));
     }
 }

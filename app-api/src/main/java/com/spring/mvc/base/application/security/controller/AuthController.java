@@ -11,7 +11,7 @@ import com.spring.mvc.base.application.security.service.TokenBlacklistService;
 import com.spring.mvc.base.application.security.service.TokenRefreshService;
 import com.spring.mvc.base.application.security.util.CookieProvider;
 import com.spring.mvc.base.common.dto.api.ApiResponse;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.AuthErrorCode;
 import com.spring.mvc.base.domain.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,7 +55,7 @@ public class AuthController implements AuthApiDocs {
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<RefreshTokenResponse>> refreshToken(HttpServletRequest request) {
         String refreshToken = cookieProvider.getRefreshTokenFromCookie(request)
-                .orElseThrow(() -> new CustomException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND));
 
         String newAccessToken = tokenRefreshService.refreshAccessToken(refreshToken);
 

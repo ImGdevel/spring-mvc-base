@@ -1,10 +1,10 @@
 package com.spring.mvc.base.common.exception.http;
 
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public class UnauthorizedException extends CustomException {
+public class UnauthorizedException extends BusinessException {
 
     public UnauthorizedException(ErrorCode errorCode) {
         super(errorCode);

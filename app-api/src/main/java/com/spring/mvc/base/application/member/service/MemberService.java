@@ -5,7 +5,7 @@ import com.spring.mvc.base.application.member.dto.request.PasswordUpdateRequest;
 import com.spring.mvc.base.application.member.dto.response.MemberDetailsResponse;
 import com.spring.mvc.base.application.member.dto.response.MemberUpdateResponse;
 import com.spring.mvc.base.application.member.validator.MemberValidator;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
 import com.spring.mvc.base.domain.member.entity.Member;
 import com.spring.mvc.base.domain.member.entity.MemberStatus;
@@ -88,6 +88,6 @@ public class MemberService {
 
     private Member findMemberById(Long id) {
         return memberRepository.findByIdAndStatus(id, MemberStatus.ACTIVE)
-                .orElseThrow(() -> new CustomException(MemberErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(MemberErrorCode.USER_NOT_FOUND));
     }
 }

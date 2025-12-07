@@ -1,10 +1,10 @@
 package com.spring.mvc.base.common.exception.http;
 
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public class ForbiddenException extends CustomException {
+public class ForbiddenException extends BusinessException {
 
     public ForbiddenException(ErrorCode errorCode) {
         super(errorCode);

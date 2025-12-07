@@ -3,7 +3,7 @@ package com.spring.mvc.base.domain.post.policy;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.config.annotation.UnitTest;
 import com.spring.mvc.base.domain.post.repository.PostLikeRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ class PostLikePolicyTest {
         given(postLikeRepository.existsByPostIdAndMemberId(1L, 1L)).willReturn(true);
 
         assertThatThrownBy(() -> postLikePolicy.validateCanLike(1L, 1L))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(BusinessException.class);
     }
 
     @Test
@@ -51,6 +51,6 @@ class PostLikePolicyTest {
         given(postLikeRepository.existsByPostIdAndMemberId(1L, 1L)).willReturn(false);
 
         assertThatThrownBy(() -> postLikePolicy.validateCanUnlike(1L, 1L))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(BusinessException.class);
     }
 }

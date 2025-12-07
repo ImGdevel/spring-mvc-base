@@ -11,7 +11,7 @@ import com.spring.mvc.base.application.comment.dto.request.CommentCreateRequest;
 import com.spring.mvc.base.application.comment.dto.request.CommentUpdateRequest;
 import com.spring.mvc.base.application.comment.dto.response.CommentResponse;
 import com.spring.mvc.base.application.common.dto.response.PageResponse;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.CommentErrorCode;
 import com.spring.mvc.base.common.exception.code.CommonErrorCode;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
@@ -89,7 +89,7 @@ class CommentServiceTest {
         given(postRepository.existsById(1L)).willReturn(false);
 
         assertThatThrownBy(() -> commentService.createComment(1L, request, 1L))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(BusinessException.class);
     }
 
     @Test
@@ -131,7 +131,7 @@ class CommentServiceTest {
         given(commentRepository.findByIdWithMember(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> commentService.getCommentsDetails(1L))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(BusinessException.class);
     }
 
     @Test
@@ -157,7 +157,7 @@ class CommentServiceTest {
         given(postRepository.existsById(1L)).willReturn(false);
 
         assertThatThrownBy(() -> commentService.getCommentPageByPostId(1L, pageable))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(BusinessException.class);
     }
 
     @Test
@@ -169,7 +169,7 @@ class CommentServiceTest {
         given(memberRepository.findById(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> commentService.createComment(1L, request, 1L))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(MemberErrorCode.USER_NOT_FOUND.getMessage());
     }
 
@@ -194,7 +194,7 @@ class CommentServiceTest {
         given(commentRepository.findByIdWithMember(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> commentService.updateComment(1L, request, 1L))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(CommentErrorCode.COMMENT_NOT_FOUND.getMessage());
     }
 
@@ -205,7 +205,7 @@ class CommentServiceTest {
         given(commentRepository.findByIdWithMember(1L)).willReturn(Optional.of(comment));
 
         assertThatThrownBy(() -> commentService.updateComment(1L, request, 2L))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(CommonErrorCode.NO_PERMISSION.getMessage());
     }
 
@@ -215,7 +215,7 @@ class CommentServiceTest {
         given(commentRepository.findByIdWithMember(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> commentService.deleteComment(1L, 1L))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(CommentErrorCode.COMMENT_NOT_FOUND.getMessage());
     }
 
@@ -226,7 +226,7 @@ class CommentServiceTest {
         given(commentRepository.findPostIdByCommentId(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> commentService.deleteComment(1L, 1L))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(CommentErrorCode.COMMENT_NOT_FOUND.getMessage());
     }
 
@@ -247,7 +247,7 @@ class CommentServiceTest {
         given(commentRepository.findByIdWithMember(1L)).willReturn(Optional.of(comment));
 
         assertThatThrownBy(() -> commentService.deleteComment(1L, 2L))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(CommentErrorCode.NO_PERMISSION.getMessage());
     }
 }

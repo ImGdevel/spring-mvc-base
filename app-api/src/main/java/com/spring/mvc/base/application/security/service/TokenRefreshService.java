@@ -1,7 +1,7 @@
 package com.spring.mvc.base.application.security.service;
 
 import com.spring.mvc.base.application.security.util.JwtTokenProvider;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.AuthErrorCode;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
 import com.spring.mvc.base.domain.member.entity.Member;
@@ -23,23 +23,23 @@ public class TokenRefreshService {
 
     public String refreshAccessToken(String refreshToken) {
         if (!jwtTokenProvider.isRefreshToken(refreshToken)) {
-            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_INVALID);
+            throw new BusinessException(AuthErrorCode.REFRESH_TOKEN_INVALID);
         }
 
         if (jwtTokenProvider.isTokenExpired(refreshToken)) {
-            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_EXPIRED);
+            throw new BusinessException(AuthErrorCode.REFRESH_TOKEN_EXPIRED);
         }
 
         if (tokenBlacklistService.isBlacklisted(refreshToken)) {
-            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_INVALID);
+            throw new BusinessException(AuthErrorCode.REFRESH_TOKEN_INVALID);
         }
 
         Long memberId = jwtTokenProvider.getUidFromToken(refreshToken);
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(MemberErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(MemberErrorCode.USER_NOT_FOUND));
 
         if (!member.isActive()) {
-            throw new CustomException(MemberErrorCode.MEMBER_INACTIVE);
+            throw new BusinessException(MemberErrorCode.MEMBER_INACTIVE);
         }
 
         return jwtTokenProvider.generateAccessToken(memberId, member.getRole().name());

@@ -18,7 +18,7 @@ import com.spring.mvc.base.application.comment.dto.response.CommentResponse;
 import com.spring.mvc.base.application.comment.service.CommentService;
 import com.spring.mvc.base.application.common.dto.response.PageResponse;
 import com.spring.mvc.base.application.member.dto.response.MemberResponse;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.CommentErrorCode;
 import com.spring.mvc.base.config.annotation.ControllerWebMvcTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -145,7 +145,7 @@ class CommentControllerTest {
     @Test
     @DisplayName("존재하지 않는 댓글 조회 - 404 Not Found")
     void getComment_notFound_returns404() throws Exception {
-        willThrow(new CustomException(CommentErrorCode.COMMENT_NOT_FOUND))
+        willThrow(new BusinessException(CommentErrorCode.COMMENT_NOT_FOUND))
                 .given(commentService).getCommentsDetails(any());
 
         mockMvc.perform(get("/api/v1/comments/{commentId}", 999L))
@@ -159,7 +159,7 @@ class CommentControllerTest {
     void updateComment_notFound_returns404() throws Exception {
         CommentUpdateRequest request = CommentRequestFixture.updateRequest();
 
-        willThrow(new CustomException(CommentErrorCode.COMMENT_NOT_FOUND))
+        willThrow(new BusinessException(CommentErrorCode.COMMENT_NOT_FOUND))
                 .given(commentService).updateComment(any(), any(), any());
 
         mockMvc.perform(patch("/api/v1/comments/{commentId}", 999L)
@@ -173,7 +173,7 @@ class CommentControllerTest {
     @Test
     @DisplayName("존재하지 않는 댓글 삭제 - 404 Not Found")
     void deleteComment_notFound_returns404() throws Exception {
-        willThrow(new CustomException(CommentErrorCode.COMMENT_NOT_FOUND))
+        willThrow(new BusinessException(CommentErrorCode.COMMENT_NOT_FOUND))
                 .given(commentService).deleteComment(any(), any());
 
         mockMvc.perform(delete("/api/v1/comments/{commentId}", 999L))

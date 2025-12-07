@@ -1,7 +1,7 @@
 package com.spring.mvc.base.application.member.validator;
 
 import com.spring.mvc.base.application.member.dto.request.SignupRequest;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
 import com.spring.mvc.base.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +23,13 @@ public class AuthValidator {
 
     private void validateEmailNotDuplicated(String email) {
         if (memberRepository.existsByEmail(email)) {
-            throw new CustomException(MemberErrorCode.DUPLICATE_EMAIL);
+            throw new BusinessException(MemberErrorCode.DUPLICATE_EMAIL);
         }
     }
 
     private void validateNicknameNotDuplicated(String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
-            throw new CustomException(MemberErrorCode.DUPLICATE_NICKNAME);
+            throw new BusinessException(MemberErrorCode.DUPLICATE_NICKNAME);
         }
     }
 }

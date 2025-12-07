@@ -14,7 +14,7 @@ import com.spring.mvc.base.application.member.dto.request.MemberUpdateRequest;
 import com.spring.mvc.base.application.member.dto.request.PasswordUpdateRequest;
 import com.spring.mvc.base.application.member.dto.response.MemberDetailsResponse;
 import com.spring.mvc.base.application.member.service.MemberService;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
 import com.spring.mvc.base.config.annotation.ControllerWebMvcTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -158,7 +158,7 @@ class MemberControllerTest {
     @Test
     @DisplayName("존재하지 않는 회원 조회 - 404 Not Found")
     void getMemberProfile_notFound_returns404() throws Exception {
-        willThrow(new CustomException(MemberErrorCode.USER_NOT_FOUND))
+        willThrow(new BusinessException(MemberErrorCode.USER_NOT_FOUND))
                 .given(memberService).getMemberProfile(any());
 
         mockMvc.perform(get("/api/v1/members/{memberId}", 999L))

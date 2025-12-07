@@ -16,7 +16,7 @@ import com.spring.mvc.base.application.security.service.SignupService;
 import com.spring.mvc.base.application.security.service.TokenBlacklistService;
 import com.spring.mvc.base.application.security.service.TokenRefreshService;
 import com.spring.mvc.base.application.security.util.CookieProvider;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
 import com.spring.mvc.base.config.annotation.ControllerWebMvcTest;
 import com.spring.mvc.base.domain.member.repository.MemberRepository;
@@ -91,7 +91,7 @@ class AuthControllerTest {
     void signup_duplicateEmail_returns409() throws Exception {
         SignupRequest request = SignupRequestFixture.createRequest();
 
-        willThrow(new CustomException(MemberErrorCode.DUPLICATE_EMAIL))
+        willThrow(new BusinessException(MemberErrorCode.DUPLICATE_EMAIL))
                 .given(signupService).signup(any());
 
         mockMvc.perform(post("/auth/signup")
@@ -107,7 +107,7 @@ class AuthControllerTest {
     void signup_duplicateNickname_returns409() throws Exception {
         SignupRequest request = SignupRequestFixture.createRequest();
 
-        willThrow(new CustomException(MemberErrorCode.DUPLICATE_NICKNAME))
+        willThrow(new BusinessException(MemberErrorCode.DUPLICATE_NICKNAME))
                 .given(signupService).signup(any());
 
         mockMvc.perform(post("/auth/signup")

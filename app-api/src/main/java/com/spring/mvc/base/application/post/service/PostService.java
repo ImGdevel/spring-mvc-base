@@ -6,7 +6,7 @@ import com.spring.mvc.base.application.post.dto.request.PostCreateRequest;
 import com.spring.mvc.base.application.post.dto.request.PostUpdateRequest;
 import com.spring.mvc.base.application.post.dto.response.PostResponse;
 import com.spring.mvc.base.application.post.dto.response.PostSummaryResponse;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
 import com.spring.mvc.base.common.exception.code.PostErrorCode;
 import com.spring.mvc.base.domain.common.policy.OwnershipPolicy;
@@ -175,11 +175,11 @@ public class PostService {
 
     private Post findByIdWithMember(Long postId) {
         return postRepository.findByIdWithMember(postId)
-                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(PostErrorCode.POST_NOT_FOUND));
     }
 
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(MemberErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(MemberErrorCode.USER_NOT_FOUND));
     }
 }

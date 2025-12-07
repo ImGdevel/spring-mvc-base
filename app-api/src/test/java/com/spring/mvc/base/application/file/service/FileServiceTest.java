@@ -13,7 +13,7 @@ import com.spring.mvc.base.application.file.dto.request.FileCreateRequest;
 import com.spring.mvc.base.application.file.dto.request.PresignRequest;
 import com.spring.mvc.base.application.file.dto.response.FileResponse;
 import com.spring.mvc.base.application.file.dto.response.PresignResponse;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.FileErrorCode;
 import com.spring.mvc.base.config.annotation.UnitTest;
 import com.spring.mvc.base.domain.file.FileFixture;
@@ -76,7 +76,7 @@ class FileServiceTest {
         given(fileRepository.findById(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> fileService.getFileById(1L))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(BusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode", FileErrorCode.FILE_NOT_FOUND);
     }
 
@@ -99,7 +99,7 @@ class FileServiceTest {
         given(fileRepository.findByStorageKey("nonexistent-key")).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> fileService.getFileByStorageKey("nonexistent-key"))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(BusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode", FileErrorCode.FILE_NOT_FOUND);
     }
 

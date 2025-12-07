@@ -2,7 +2,7 @@ package com.spring.mvc.base.common.exception.handler;
 
 import com.spring.mvc.base.common.dto.api.FieldError;
 import com.spring.mvc.base.common.dto.api.ErrorResponse;
-import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.ErrorCode;
 import com.spring.mvc.base.common.exception.http.ConflictException;
 import com.spring.mvc.base.common.exception.http.ForbiddenException;
@@ -13,7 +13,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -25,53 +24,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(CustomException e) {
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
         ErrorCode errorCode = e.getErrorCode();
-        log.error("[CustomException] {} - {}", errorCode.name(), e.getMessage(), e);
+        String errorMessage = errorCode.getMessage();
+        HttpStatus httpStatus = e.getHttpStatus();
+
+        log.error("[BusinessException] {} - {}", httpStatus, errorMessage, e);
         ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        log.error("[NotFoundException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ErrorResponse response = ErrorResponse.from(errorCode);
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        log.error("[UnauthorizedException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ErrorResponse response = ErrorResponse.from(errorCode);
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
-    }
-
-    @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        log.error("[ForbiddenException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ErrorResponse response = ErrorResponse.from(errorCode);
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
-    }
-
-    @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorResponse> handleConflictException(ConflictException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        log.error("[ConflictException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ErrorResponse response = ErrorResponse.from(errorCode);
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
-    }
-
-    @ExceptionHandler(InvalidRequestException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidRequestException(InvalidRequestException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        log.error("[InvalidRequestException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ErrorResponse response = ErrorResponse.from(errorCode);
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
-    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     public ResponseEntity<ErrorResponse> handleValidationException(BindException e) {
