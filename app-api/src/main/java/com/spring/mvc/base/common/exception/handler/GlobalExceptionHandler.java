@@ -1,7 +1,15 @@
-package com.spring.mvc.base.common.exception;
+package com.spring.mvc.base.common.exception.handler;
 
-import com.spring.mvc.base.common.dto.api.ApiResponse;
 import com.spring.mvc.base.common.dto.api.FieldError;
+import com.spring.mvc.base.common.dto.api.ErrorResponse;
+import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.ErrorCode;
+import com.spring.mvc.base.common.exception.http.ConflictException;
+import com.spring.mvc.base.common.exception.http.ForbiddenException;
+import com.spring.mvc.base.common.exception.http.HttpException;
+import com.spring.mvc.base.common.exception.http.InvalidRequestException;
+import com.spring.mvc.base.common.exception.http.NotFoundException;
+import com.spring.mvc.base.common.exception.http.UnauthorizedException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import java.util.List;
@@ -18,63 +26,63 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ApiResponse<Object>> handleBusinessException(CustomException e) {
+    public ResponseEntity<ErrorResponse> handleBusinessException(CustomException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error("[CustomException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ApiResponse<Object>> handleNotFoundException(NotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error("[NotFoundException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ApiResponse<Object>> handleUnauthorizedException(UnauthorizedException e) {
+    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error("[UnauthorizedException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ApiResponse<Object>> handleForbiddenException(ForbiddenException e) {
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error("[ForbiddenException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ApiResponse<Object>> handleConflictException(ConflictException e) {
+    public ResponseEntity<ErrorResponse> handleConflictException(ConflictException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error("[ConflictException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(InvalidRequestException.class)
-    public ResponseEntity<ApiResponse<Object>> handleInvalidRequestException(InvalidRequestException e) {
+    public ResponseEntity<ErrorResponse> handleInvalidRequestException(InvalidRequestException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error("[InvalidRequestException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(HttpException.class)
-    public ResponseEntity<ApiResponse<Object>> handleHttpException(HttpException e) {
+    public ResponseEntity<ErrorResponse> handleHttpException(HttpException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error("[HttpException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-    public ResponseEntity<ApiResponse<Object>> handleValidationException(BindException e) {
+    public ResponseEntity<ErrorResponse> handleValidationException(BindException e) {
         log.error("[ValidationException] {}", e.getMessage(), e);
 
         List<FieldError> errors = e.getBindingResult().getFieldErrors().stream()
@@ -85,28 +93,28 @@ public class GlobalExceptionHandler {
                 ))
                 .toList();
 
-        ApiResponse<Object> response = ApiResponse.failure("validation_failed", errors);
+        ErrorResponse response = ErrorResponse.of("validation_failed", errors);
         return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ApiResponse<Object>> handleExpiredJwtException(ExpiredJwtException e) {
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException e) {
         log.error("[ExpiredJwtException] {}", e.getMessage());
-        ApiResponse<Object> response = ApiResponse.failure("토큰이 만료되었습니다");
+        ErrorResponse response = ErrorResponse.of("토큰이 만료되었습니다");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ApiResponse<Object>> handleJwtException(JwtException e) {
+    public ResponseEntity<ErrorResponse> handleJwtException(JwtException e) {
         log.error("[JwtException] {}", e.getMessage());
-        ApiResponse<Object> response = ApiResponse.failure("유효하지 않은 토큰입니다");
+        ErrorResponse response = ErrorResponse.of("유효하지 않은 토큰입니다");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Object>> handleException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error("[UnhandledException] {}", e.getMessage(), e);
-        ApiResponse<Object> response = ApiResponse.failure("internal_server_error");
+        ErrorResponse response = ErrorResponse.of("internal_server_error");
         return ResponseEntity.internalServerError().body(response);
     }
 }

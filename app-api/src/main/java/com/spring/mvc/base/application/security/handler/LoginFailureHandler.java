@@ -1,7 +1,7 @@
 package com.spring.mvc.base.application.security.handler;
 
-import com.spring.mvc.base.common.dto.api.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.mvc.base.common.dto.api.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        ApiResponse<Void> apiResponse = ApiResponse.failure("로그인이 실패했습니다");
-        response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+        ErrorResponse errorResponse = ErrorResponse.of("로그인이 실패했습니다");
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 }

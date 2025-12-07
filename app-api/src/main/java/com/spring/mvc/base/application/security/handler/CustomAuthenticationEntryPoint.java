@@ -1,7 +1,7 @@
 package com.spring.mvc.base.application.security.handler;
 
-import com.spring.mvc.base.common.dto.api.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.mvc.base.common.dto.api.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +29,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
 
-        ApiResponse<Object> apiResponse = ApiResponse.failure("인증이 필요합니다");
-        response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+        ErrorResponse errorResponse = ErrorResponse.of("인증이 필요합니다");
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 }

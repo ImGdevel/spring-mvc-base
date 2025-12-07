@@ -1,5 +1,6 @@
-package com.spring.mvc.base.common.exception;
+package com.spring.mvc.base.common.exception.http;
 
+import com.spring.mvc.base.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class ConflictException extends HttpException {
@@ -17,4 +18,3 @@ public class ConflictException extends HttpException {
         return HttpStatus.CONFLICT;
     }
 }
-

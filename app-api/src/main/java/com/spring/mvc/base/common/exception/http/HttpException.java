@@ -1,5 +1,7 @@
-package com.spring.mvc.base.common.exception;
+package com.spring.mvc.base.common.exception.http;
 
+import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -16,6 +18,4 @@ public abstract class HttpException extends CustomException {
         super(errorCode, message);
     }
 
-    public abstract HttpStatus getHttpStatus();
 }
-

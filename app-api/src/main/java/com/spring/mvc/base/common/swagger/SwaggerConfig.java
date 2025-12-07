@@ -1,5 +1,6 @@
 package com.spring.mvc.base.common.swagger;
 
+import com.spring.mvc.base.common.dto.api.ErrorResponse;
 import com.spring.mvc.base.common.exception.ErrorCode;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -102,16 +103,14 @@ public class SwaggerConfig {
     private ApiResponse createErrorApiResponse(ErrorCode errorCode) {
         String description = errorCode.getMessage();
 
-        java.util.Map<String, Object> exampleMap = new java.util.HashMap<>();
-        exampleMap.put("success", false);
-        exampleMap.put("data", null);
-        exampleMap.put("message", errorCode.getMessage());
+        ErrorResponse example = ErrorResponse.from(errorCode);
 
         Schema<?> errorSchema = new Schema<>()
                 .type("object")
                 .addProperty("success", new Schema<>().type("boolean").example(false))
-                .addProperty("data", new Schema<>().type("object").nullable(true).example(null))
-                .addProperty("message", new Schema<>().type("string").example(errorCode.getMessage()));
+                .addProperty("code", new Schema<>().type("string").example(errorCode.name()))
+                .addProperty("message", new Schema<>().type("string").example(errorCode.getMessage()))
+                .addProperty("errors", new Schema<>().type("array"));
 
         return new ApiResponse()
                 .description(description)
@@ -119,7 +118,7 @@ public class SwaggerConfig {
                         .addMediaType("application/json",
                                 new MediaType()
                                         .schema(errorSchema)
-                                        .example(exampleMap)
+                                        .example(example)
                         )
                 );
     }
