@@ -1,14 +1,12 @@
 package com.spring.mvc.base.application.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.mvc.base.common.dto.api.ErrorResponse;
+import com.spring.mvc.base.application.security.util.SecurityResponseSender;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -18,18 +16,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final ObjectMapper objectMapper;
+    private final SecurityResponseSender securityResponseSender;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
         log.error("[AuthenticationEntryPoint] {}", authException.getMessage(), authException);
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("UTF-8");
-
-        ErrorResponse errorResponse = ErrorResponse.of("인증이 필요합니다");
-        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+        securityResponseSender.sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "인증이 필요합니다");
     }
 }
