@@ -25,6 +25,54 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleNotFoundException(NotFoundException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.error("[NotFoundException] {} - {}", errorCode.name(), e.getMessage(), e);
+        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiResponse<Object>> handleUnauthorizedException(UnauthorizedException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.error("[UnauthorizedException] {} - {}", errorCode.name(), e.getMessage(), e);
+        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiResponse<Object>> handleForbiddenException(ForbiddenException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.error("[ForbiddenException] {} - {}", errorCode.name(), e.getMessage(), e);
+        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiResponse<Object>> handleConflictException(ConflictException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.error("[ConflictException] {} - {}", errorCode.name(), e.getMessage(), e);
+        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInvalidRequestException(InvalidRequestException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.error("[InvalidRequestException] {} - {}", errorCode.name(), e.getMessage(), e);
+        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
+    }
+
+    @ExceptionHandler(HttpException.class)
+    public ResponseEntity<ApiResponse<Object>> handleHttpException(HttpException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.error("[HttpException] {} - {}", errorCode.name(), e.getMessage(), e);
+        ApiResponse<Object> response = ApiResponse.failure(errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
+    }
+
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     public ResponseEntity<ApiResponse<Object>> handleValidationException(BindException e) {
         log.error("[ValidationException] {}", e.getMessage(), e);
