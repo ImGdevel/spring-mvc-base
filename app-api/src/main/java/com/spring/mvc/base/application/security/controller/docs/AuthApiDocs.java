@@ -7,7 +7,7 @@ import com.spring.mvc.base.application.security.dto.response.LoginResponse;
 import com.spring.mvc.base.application.security.dto.response.RefreshTokenResponse;
 import com.spring.mvc.base.common.dto.api.ApiResponse;
 import com.spring.mvc.base.common.swagger.CustomErrorResponseDescription;
-import com.spring.mvc.base.common.swagger.SwaggerResponseDescription;
+import com.spring.mvc.base.common.swagger.SwaggerErrorResponseDescription;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ public interface AuthApiDocs {
             summary = "회원가입",
             description = "새로운 회원을 등록하고 액세스 토큰을 발급합니다."
     )
-    @CustomErrorResponseDescription(SwaggerResponseDescription.AUTH_SIGNUP)
+    @CustomErrorResponseDescription(SwaggerErrorResponseDescription.AUTH_SIGNUP)
     ApiResponse<LoginResponse> signUp(
             SignupRequest request
     );

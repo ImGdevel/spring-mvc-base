@@ -14,7 +14,7 @@ import lombok.Getter;
  * 각 API별로 발생 가능한 에러 코드를 정의
  */
 @Getter
-public enum SwaggerResponseDescription {
+public enum SwaggerErrorResponseDescription {
 
     // Auth API
     AUTH_SIGNUP(new LinkedHashSet<>(Set.of(
@@ -99,7 +99,7 @@ public enum SwaggerResponseDescription {
 
     private final Set<ErrorCode> errorCodeList;
 
-    SwaggerResponseDescription(Set<ErrorCode> errorCodeList) {
+    SwaggerErrorResponseDescription(Set<ErrorCode> errorCodeList) {
         // 공통 에러 추가
         errorCodeList.addAll(new LinkedHashSet<>(Set.of(
                 CommonErrorCode.INVALID_REQUEST,

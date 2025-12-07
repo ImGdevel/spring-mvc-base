@@ -1,15 +1,13 @@
 package com.spring.mvc.base.application.post.controller.docs;
 
-import com.spring.mvc.base.application.common.dto.request.PageSortRequest;
 import com.spring.mvc.base.application.common.dto.response.PageResponse;
-import com.spring.mvc.base.application.post.dto.ViewContext;
 import com.spring.mvc.base.application.post.dto.request.PostCreateRequest;
 import com.spring.mvc.base.application.post.dto.request.PostUpdateRequest;
 import com.spring.mvc.base.application.post.dto.response.PostResponse;
 import com.spring.mvc.base.application.post.dto.response.PostSummaryResponse;
 import com.spring.mvc.base.common.dto.api.ApiResponse;
 import com.spring.mvc.base.common.swagger.CustomErrorResponseDescription;
-import com.spring.mvc.base.common.swagger.SwaggerResponseDescription;
+import com.spring.mvc.base.common.swagger.SwaggerErrorResponseDescription;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +24,7 @@ public interface PostApiDocs {
             summary = "게시글 생성",
             description = "새로운 게시글을 작성합니다."
     )
-    @CustomErrorResponseDescription(SwaggerResponseDescription.POST_CREATE)
+    @CustomErrorResponseDescription(SwaggerErrorResponseDescription.POST_CREATE)
     ApiResponse<PostResponse> createPost(
             PostCreateRequest request,
             Long memberId
@@ -36,7 +34,7 @@ public interface PostApiDocs {
             summary = "게시글 수정",
             description = "기존 게시글을 수정합니다."
     )
-    @CustomErrorResponseDescription(SwaggerResponseDescription.POST_UPDATE)
+    @CustomErrorResponseDescription(SwaggerErrorResponseDescription.POST_UPDATE)
     ApiResponse<PostResponse> updatePost(
             @Parameter(description = "게시글 ID") Long postId,
             PostUpdateRequest request,
@@ -47,7 +45,7 @@ public interface PostApiDocs {
             summary = "게시글 삭제",
             description = "게시글을 삭제합니다."
     )
-    @CustomErrorResponseDescription(SwaggerResponseDescription.POST_DELETE)
+    @CustomErrorResponseDescription(SwaggerErrorResponseDescription.POST_DELETE)
     void deletePost(
             @Parameter(description = "게시글 ID") Long postId,
             Long memberId
@@ -57,7 +55,7 @@ public interface PostApiDocs {
             summary = "게시글 단건 조회",
             description = "특정 게시글의 상세 정보를 조회합니다."
     )
-    @CustomErrorResponseDescription(SwaggerResponseDescription.POST_GET)
+    @CustomErrorResponseDescription(SwaggerErrorResponseDescription.POST_GET)
     ApiResponse<PostResponse> getPost(
             @Parameter(description = "게시글 ID") Long postId,
             Long memberId,
@@ -68,7 +66,7 @@ public interface PostApiDocs {
             summary = "게시글 목록 조회",
             description = "게시글 목록을 페이징하여 조회합니다."
     )
-    @CustomErrorResponseDescription(SwaggerResponseDescription.POST_LIST)
+    @CustomErrorResponseDescription(SwaggerErrorResponseDescription.POST_LIST)
     ApiResponse<PageResponse<PostSummaryResponse>> getPostPage(
             @Parameter(description = "페이지 번호", example = "0") Integer page,
             @Parameter(description = "페이지 크기", example = "20") Integer size,
@@ -80,7 +78,7 @@ public interface PostApiDocs {
             summary = "게시글 좋아요",
             description = "게시글에 좋아요를 추가합니다."
     )
-    @CustomErrorResponseDescription(SwaggerResponseDescription.POST_LIKE)
+    @CustomErrorResponseDescription(SwaggerErrorResponseDescription.POST_LIKE)
     void likePost(
             @Parameter(description = "게시글 ID") Long postId,
             Long memberId
@@ -90,7 +88,7 @@ public interface PostApiDocs {
             summary = "게시글 좋아요 취소",
             description = "게시글의 좋아요를 취소합니다."
     )
-    @CustomErrorResponseDescription(SwaggerResponseDescription.POST_UNLIKE)
+    @CustomErrorResponseDescription(SwaggerErrorResponseDescription.POST_UNLIKE)
     void unlikePost(
             @Parameter(description = "게시글 ID") Long postId,
             Long memberId

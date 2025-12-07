@@ -90,7 +90,7 @@ public class SwaggerConfig {
             return;
         }
 
-        SwaggerResponseDescription responseDescription = annotation.value();
+        SwaggerErrorResponseDescription responseDescription = annotation.value();
         ApiResponses apiResponses = operation.getResponses();
 
         for (ErrorCode errorCode : responseDescription.getErrorCodeList()) {
