@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
                 ))
                 .toList();
 
-        ErrorResponse response = ErrorResponse.of("validation_failed", errors);
+        ErrorResponse response = ErrorResponse.of("유요하지 않은 요청 데이터 포맷입니다", errors);
         return ResponseEntity.badRequest().body(response);
     }
 
@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        ErrorResponse response = ErrorResponse.of("internal_server_error");
+        ErrorResponse response = ErrorResponse.of("서버 내부 오류가 발생했습니다");
         return ResponseEntity.internalServerError().body(response);
     }
 }
