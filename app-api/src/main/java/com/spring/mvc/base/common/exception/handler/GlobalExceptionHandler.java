@@ -4,6 +4,8 @@ import com.spring.mvc.base.common.dto.api.ErrorResponse;
 import com.spring.mvc.base.common.dto.api.FieldError;
 import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.ErrorCode;
+import com.spring.mvc.base.common.exception.code.AuthErrorCode;
+import com.spring.mvc.base.common.exception.code.CommonErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import java.util.List;
@@ -54,7 +56,7 @@ public class GlobalExceptionHandler {
                 ))
                 .toList();
 
-        ErrorResponse response = ErrorResponse.of("유요하지 않은 요청 데이터 포맷입니다", errors);
+        ErrorResponse response = ErrorResponse.from(CommonErrorCode.VALIDATION_FAILED, errors);
         return ResponseEntity.badRequest().body(response);
     }
 
@@ -65,8 +67,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException e) {
-        ErrorResponse response = ErrorResponse.of("토큰이 만료되었습니다");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        ErrorResponse response = ErrorResponse.from(AuthErrorCode.TOKEN_EXPIRED);
+        return ResponseEntity.status(AuthErrorCode.TOKEN_EXPIRED.getHttpStatus()).body(response);
     }
 
     /**
@@ -76,8 +78,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ErrorResponse> handleJwtException(JwtException e) {
-        ErrorResponse response = ErrorResponse.of("유효하지 않은 토큰입니다");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        ErrorResponse response = ErrorResponse.from(AuthErrorCode.TOKEN_INVALID);
+        return ResponseEntity.status(AuthErrorCode.TOKEN_INVALID.getHttpStatus()).body(response);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.spring.mvc.base.application.security.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mvc.base.common.dto.api.ApiResponse;
 import com.spring.mvc.base.common.dto.api.ErrorResponse;
+import com.spring.mvc.base.common.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,15 @@ public class SecurityResponseSender {
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 
+    public void sendError(HttpServletResponse response, ErrorCode errorCode) throws IOException {
+        response.setStatus(errorCode.getHttpStatus().value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+
+        ErrorResponse errorResponse = ErrorResponse.from(errorCode);
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+    }
+
     public void sendSuccess(HttpServletResponse response, int status, String message) throws IOException {
         sendSuccess(response, status, null, message);
     }
@@ -44,4 +54,3 @@ public class SecurityResponseSender {
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
     }
 }
-

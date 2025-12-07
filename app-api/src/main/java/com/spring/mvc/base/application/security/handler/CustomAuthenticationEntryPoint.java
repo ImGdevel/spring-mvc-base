@@ -1,6 +1,7 @@
 package com.spring.mvc.base.application.security.handler;
 
 import com.spring.mvc.base.application.security.util.SecurityResponseSender;
+import com.spring.mvc.base.common.exception.code.AuthErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +24,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                          AuthenticationException authException) throws IOException, ServletException {
         log.error("[AuthenticationEntryPoint] {}", authException.getMessage(), authException);
 
-        securityResponseSender.sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "인증이 필요합니다");
+        securityResponseSender.sendError(response, AuthErrorCode.AUTHENTICATION_REQUIRED);
     }
 }

@@ -1,6 +1,7 @@
 package com.spring.mvc.base.common.swagger;
 
 import com.spring.mvc.base.common.exception.ErrorCode;
+import com.spring.mvc.base.common.exception.code.AuthErrorCode;
 import com.spring.mvc.base.common.exception.code.CommentErrorCode;
 import com.spring.mvc.base.common.exception.code.CommonErrorCode;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
@@ -102,8 +103,10 @@ public enum SwaggerErrorResponseDescription {
     SwaggerErrorResponseDescription(Set<ErrorCode> errorCodeList) {
         // 공통 에러 추가
         errorCodeList.addAll(new LinkedHashSet<>(Set.of(
-                CommonErrorCode.INVALID_REQUEST,
-                CommonErrorCode.INTERNAL_SERVER_ERROR
+                CommonErrorCode.VALIDATION_FAILED,
+                CommonErrorCode.INTERNAL_SERVER_ERROR,
+                AuthErrorCode.AUTHENTICATION_REQUIRED,
+                AuthErrorCode.ACCESS_DENIED
         )));
 
         this.errorCodeList = errorCodeList;

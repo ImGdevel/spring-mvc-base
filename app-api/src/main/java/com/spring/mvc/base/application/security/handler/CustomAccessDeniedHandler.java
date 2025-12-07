@@ -1,6 +1,7 @@
 package com.spring.mvc.base.application.security.handler;
 
 import com.spring.mvc.base.application.security.util.SecurityResponseSender;
+import com.spring.mvc.base.common.exception.code.AuthErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +24,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.error("[AccessDeniedHandler] {}", accessDeniedException.getMessage(), accessDeniedException);
 
-        securityResponseSender.sendError(response, HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다");
+        securityResponseSender.sendError(response, AuthErrorCode.ACCESS_DENIED);
     }
 }

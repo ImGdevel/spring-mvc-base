@@ -48,5 +48,13 @@ public class ErrorResponse {
                 .message(message)
                 .build();
     }
-}
 
+    public static ErrorResponse from(ErrorCode errorCode, List<FieldError> errors) {
+        return ErrorResponse.builder()
+                .success(false)
+                .code(errorCode.name())
+                .message(errorCode.getMessage())
+                .errors(errors)
+                .build();
+    }
+}
