@@ -1,6 +1,6 @@
-package com.spring.mvc.base.domain.post.repository;
+package com.spring.mvc.base.domain.comment.repository;
 
-import com.spring.mvc.base.domain.post.entity.Comment;
+import com.spring.mvc.base.domain.comment.entity.Comment;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,10 +1,11 @@
-package com.spring.mvc.base.domain.post.entity;
+package com.spring.mvc.base.domain.comment.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.spring.mvc.base.config.annotation.UnitTest;
 import com.spring.mvc.base.domain.member.entity.Member;
+import com.spring.mvc.base.domain.post.entity.Post;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

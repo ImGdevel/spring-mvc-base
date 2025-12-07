@@ -1,11 +1,11 @@
-package com.spring.mvc.base.domain.post.repository.impl;
+package com.spring.mvc.base.domain.comment.repository.impl;
 
 import static com.spring.mvc.base.domain.member.entity.QMember.member;
-import static com.spring.mvc.base.domain.post.entity.QComment.comment;
+import static com.spring.mvc.base.domain.comment.entity.QComment.comment;
 
 import com.spring.mvc.base.domain.common.repository.QueryDslOrderUtil;
-import com.spring.mvc.base.domain.post.dto.CommentQueryDto;
-import com.spring.mvc.base.domain.post.repository.CommentQueryRepository;
+import com.spring.mvc.base.domain.comment.dto.CommentQueryDto;
+import com.spring.mvc.base.domain.comment.repository.CommentQueryRepository;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;

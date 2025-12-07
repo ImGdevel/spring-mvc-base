@@ -1,15 +1,16 @@
-package com.spring.mvc.base.domain.post.repository;
+package com.spring.mvc.base.domain.comment.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.spring.mvc.base.config.annotation.RepositoryJpaTest;
+import com.spring.mvc.base.domain.comment.entity.Comment;
 import com.spring.mvc.base.domain.member.MemberFixture;
 import com.spring.mvc.base.domain.member.entity.Member;
 import com.spring.mvc.base.domain.member.repository.MemberRepository;
 import com.spring.mvc.base.domain.post.CommentFixture;
 import com.spring.mvc.base.domain.post.PostFixture;
-import com.spring.mvc.base.domain.post.entity.Comment;
 import com.spring.mvc.base.domain.post.entity.Post;
+import com.spring.mvc.base.domain.post.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;

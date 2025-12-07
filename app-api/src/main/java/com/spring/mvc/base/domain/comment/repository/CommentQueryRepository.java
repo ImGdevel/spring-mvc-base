@@ -1,6 +1,6 @@
-package com.spring.mvc.base.domain.post.repository;
+package com.spring.mvc.base.domain.comment.repository;
 
-import com.spring.mvc.base.domain.post.dto.CommentQueryDto;
+import com.spring.mvc.base.domain.comment.dto.CommentQueryDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

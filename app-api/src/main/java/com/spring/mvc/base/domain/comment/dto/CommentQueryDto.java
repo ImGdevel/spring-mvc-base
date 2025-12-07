@@ -1,4 +1,4 @@
-package com.spring.mvc.base.domain.post.dto;
+package com.spring.mvc.base.domain.comment.dto;
 
 import java.time.Instant;
 

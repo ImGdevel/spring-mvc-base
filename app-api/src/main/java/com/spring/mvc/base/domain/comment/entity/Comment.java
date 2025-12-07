@@ -1,7 +1,8 @@
-package com.spring.mvc.base.domain.post.entity;
+package com.spring.mvc.base.domain.comment.entity;
 
 import com.spring.mvc.base.domain.common.entity.BaseTimeEntity;
 import com.spring.mvc.base.domain.member.entity.Member;
+import com.spring.mvc.base.domain.post.entity.Post;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

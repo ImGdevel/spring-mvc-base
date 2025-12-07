@@ -1,7 +1,7 @@
 package com.spring.mvc.base.domain.post;
 
 import com.spring.mvc.base.domain.member.entity.Member;
-import com.spring.mvc.base.domain.post.entity.Comment;
+import com.spring.mvc.base.domain.comment.entity.Comment;
 import com.spring.mvc.base.domain.post.entity.Post;
 import org.springframework.test.util.ReflectionTestUtils;
 
