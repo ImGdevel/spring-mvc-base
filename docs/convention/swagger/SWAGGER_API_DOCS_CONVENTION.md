@@ -48,6 +48,7 @@
 ## 6. 컨트롤러 구현 클래스 컨벤션
 - 컨트롤러는 `*ApiDocs`를 구현한다.
 - Swagger 관련 어노테이션은 전부 제거하고, HTTP 매핑/바인딩 관련 어노테이션만 유지한다.
+- `*ApiDocs`를 구현하는 메서드에 대해서는 `@Override` 애너테이션을 사용하지 않는다. (Docs 인터페이스는 문서/계약 용도로만 사용하며, 구현 세부와의 강한 결합을 피한다.)
 
 ## 7. SwaggerConfig 연동 규칙
 - `SwaggerConfig`에서 `OperationCustomizer`가 다음 순서로 `@CustomExceptionDescription`을 찾도록 구성한다.
