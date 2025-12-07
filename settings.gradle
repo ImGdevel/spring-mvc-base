@@ -1,0 +1,3 @@
+rootProject.name = 'spring-mvc-base'
+
+include 'app-api'

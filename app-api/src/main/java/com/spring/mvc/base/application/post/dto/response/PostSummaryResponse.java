@@ -1,0 +1,54 @@
+package com.spring.mvc.base.application.post.dto.response;
+
+import com.spring.mvc.base.application.member.dto.response.MemberResponse;
+import com.spring.mvc.base.domain.post.dto.PostSummaryQueryDto;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.Instant;
+
+@Schema(description = "게시글 요약 응답 DTO")
+public record PostSummaryResponse(
+        @Schema(description = "게시글 ID", example = "1")
+        Long postId,
+
+        @Schema(description = "게시글 제목", example = "This is a title.")
+        String title,
+
+        @Schema(description = "작성자 정보")
+        MemberResponse member,
+
+        @Schema(description = "생성 시각")
+        Instant createdAt,
+
+        @Schema(description = "조회수", example = "100")
+        Long viewCount,
+
+        @Schema(description = "좋아요 수", example = "10")
+        Long likeCount,
+
+        @Schema(description = "댓글 수", example = "5")
+        Long commentCount,
+
+        @Schema(description = "요약", example = "게시글 요약입니다")
+        String summary,
+
+        @Schema(description = "썸네일 URL", example = "https://picsum.photos/200/150")
+        String thumbnail
+) {
+    public static PostSummaryResponse fromDto(PostSummaryQueryDto dto) {
+        return new PostSummaryResponse(
+                dto.postId(),
+                dto.title(),
+                new MemberResponse(
+                        dto.memberId(),
+                        dto.memberNickname(),
+                        dto.memberProfileImageUrl()
+                ),
+                dto.createdAt(),
+                dto.viewsCount(),
+                dto.likeCount(),
+                dto.commentCount(),
+                dto.summary(),
+                dto.thumbnail()
+        );
+    }
+}

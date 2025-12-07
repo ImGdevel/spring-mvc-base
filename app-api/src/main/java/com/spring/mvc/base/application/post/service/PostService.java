@@ -1,0 +1,185 @@
+package com.spring.mvc.base.application.post.service;
+
+import com.spring.mvc.base.application.common.dto.response.PageResponse;
+import com.spring.mvc.base.application.file.service.FileService;
+import com.spring.mvc.base.application.post.dto.request.PostCreateRequest;
+import com.spring.mvc.base.application.post.dto.request.PostUpdateRequest;
+import com.spring.mvc.base.application.post.dto.response.PostResponse;
+import com.spring.mvc.base.application.post.dto.response.PostSummaryResponse;
+import com.spring.mvc.base.common.exception.CustomException;
+import com.spring.mvc.base.common.exception.code.MemberErrorCode;
+import com.spring.mvc.base.common.exception.code.PostErrorCode;
+import com.spring.mvc.base.domain.common.policy.OwnershipPolicy;
+import com.spring.mvc.base.domain.member.entity.Member;
+import com.spring.mvc.base.domain.member.repository.MemberRepository;
+import com.spring.mvc.base.domain.post.dto.PostSearchCondition;
+import com.spring.mvc.base.domain.post.dto.PostSummaryQueryDto;
+import com.spring.mvc.base.domain.post.entity.Post;
+import com.spring.mvc.base.domain.post.repository.PostLikeRepository;
+import com.spring.mvc.base.domain.post.repository.PostRepository;
+import com.spring.mvc.base.domain.post.util.MarkdownImageExtractor;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class PostService {
+    private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
+    private final FileService fileService;
+    private final OwnershipPolicy ownershipPolicy;
+    private final PostLikeRepository postLikeRepository;
+    private final PostTagService postTagService;
+
+    /**
+     * 게시글 생성
+     */
+    @Transactional
+    public PostResponse createPost(PostCreateRequest request, Long memberId) {
+        Member member = findMemberById(memberId);
+
+        Post post = Post.create(member, request.title(), request.content());
+
+        if (request.summary() != null) {
+            post.updateSummary(request.summary());
+        }
+        if (request.visibility() != null) {
+            post.updateVisibility(request.visibility());
+        }
+        if (request.isDraft() != null) {
+            if (request.isDraft()) {
+                post.markAsDraft();
+            } else {
+                post.publish();
+            }
+        }
+        if (request.commentsAllowed() != null) {
+            post.setCommentsAllowed(request.commentsAllowed());
+        }
+        if (request.thumbnail() != null) {
+            post.updateThumbnail(request.thumbnail());
+        }
+        if (request.image() != null) {
+            post.updateImageUrl(request.image());
+        }
+
+        Post savedPost = postRepository.save(post);
+        postTagService.createPostTags(savedPost, request.tags());
+
+        return PostResponse.of(savedPost, member, null);
+    }
+
+    /**
+     * 게시글 수정
+     */
+    @Transactional
+    public PostResponse updatePost(Long postId, PostUpdateRequest request, Long memberId) {
+        Post post = findByIdWithMember(postId);
+        Member member = findMemberById(memberId);
+
+        ownershipPolicy.validateOwnership(post.getMember().getId(), memberId);
+
+        if (request.title() != null || request.content() != null) {
+            post.updatePost(
+                    request.title() != null ? request.title() : post.getTitle(),
+                    request.content() != null ? request.content() : post.getContent()
+            );
+        }
+
+        if (request.summary() != null) {
+            post.updateSummary(request.summary());
+        }
+        if (request.visibility() != null) {
+            post.updateVisibility(request.visibility());
+        }
+        if (request.commentsAllowed() != null) {
+            post.setCommentsAllowed(request.commentsAllowed());
+        }
+        if (request.thumbnail() != null) {
+            post.updateThumbnail(request.thumbnail());
+        }
+        if (request.image() != null) {
+            post.updateImageUrl(request.image());
+        }
+
+        Post savedPost = postRepository.save(post);
+
+        postTagService.updatePostTags(savedPost, request.tags());
+
+        return PostResponse.of(savedPost, member, null);
+    }
+
+    /**
+     * 게시글 삭제
+     */
+    @Transactional
+    public void deletePost(Long postId, Long memberId) {
+        Post post = findByIdWithMember(postId);
+        ownershipPolicy.validateOwnership(post.getMember().getId(), memberId);
+
+        List<String> imageUrls = MarkdownImageExtractor.extractImageUrls(post.getContent());
+        imageUrls.forEach(fileService::deleteFileByUrl);
+
+        post.delete();
+        postRepository.save(post);
+    }
+
+    /**
+     * 게시글 조회
+     */
+    @Transactional(readOnly = true)
+    public PostResponse getPostDetails(Long postId, Long memberId) {
+        Post post = findByIdWithMember(postId);
+
+        Member member = post.getMember();
+
+        boolean isLiked = false;
+        if(memberId != null && postLikeRepository.existsByPostIdAndMemberId(postId, memberId)){
+            isLiked = true;
+        }
+
+        return PostResponse.of(post, member, null, isLiked);
+    }
+
+    /**
+     * 게시글 페이지 조회 (+페이징 및 정렬)
+     */
+    @Transactional(readOnly = true)
+    public PageResponse<PostSummaryResponse> getPostPage(Pageable pageable) {
+        Page<PostSummaryQueryDto> postDtoPage = postRepository.searchPosts(PostSearchCondition.empty(), pageable);
+
+        List<PostSummaryResponse> postSummaries = postDtoPage.getContent().stream()
+                .map(PostSummaryResponse::fromDto)
+                .toList();
+
+        return PageResponse.of(postSummaries, postDtoPage);
+    }
+
+    /**
+     * 태그로 게시글 필터링 조회 (+페이징 및 정렬)
+     */
+    @Transactional(readOnly = true)
+    public PageResponse<PostSummaryResponse> getPostPageByTags(List<String> tags, Pageable pageable) {
+        Page<PostSummaryQueryDto> postDtoPage = postRepository.searchPosts(PostSearchCondition.forTags(tags), pageable);
+
+        List<PostSummaryResponse> postSummaries = postDtoPage.getContent().stream()
+                .map(PostSummaryResponse::fromDto)
+                .toList();
+
+        return PageResponse.of(postSummaries, postDtoPage);
+    }
+
+    private Post findByIdWithMember(Long postId) {
+        return postRepository.findByIdWithMember(postId)
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
+    }
+
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(MemberErrorCode.USER_NOT_FOUND));
+    }
+}

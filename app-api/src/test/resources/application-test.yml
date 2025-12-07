@@ -1,0 +1,95 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: false
+        generate_statistics: false
+        hbm2ddl:
+          auto: create-drop
+          jdbc_metadata_extraction_strategy: individually
+    show-sql: false
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  security:
+    jwt:
+      secret: testSecretKeyForJwtTokenGenerationAndValidation1234567890
+      access-token-expiration: 3600000
+      refresh-token-expiration: 604800000
+
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test-client-id
+            client-secret: test-client-secret
+            scope:
+              - email
+              - profile
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+
+    cors:
+      allowed-origins:
+        - http://localhost:3000
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - PATCH
+        - OPTIONS
+      allowed-headers:
+        - "*"
+      allow-credentials: true
+      max-age: 3600
+      exposed-headers:
+        - Set-Cookie
+        - Authorization
+
+storage:
+  cloudinary:
+    api:
+      key: test-api-key
+      secret: test-api-secret
+    cloud:
+      name: test-cloud-name
+    upload:
+      preset: test-upload-preset
+
+aop:
+  api-logging:
+    enabled: false
+  service-performance:
+    enabled: false
+  transactional-query-logging:
+    enabled: false
+
+logging:
+  level:
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    org.hibernate.stat: INFO
+    org.hibernate.engine.internal.StatisticalLoggingSessionEventListener: ERROR
+    org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl: ERROR
+    org.springframework.jdbc.datasource.init: WARN
