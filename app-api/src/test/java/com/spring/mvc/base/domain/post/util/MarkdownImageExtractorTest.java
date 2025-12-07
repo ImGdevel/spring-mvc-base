@@ -2,6 +2,7 @@ package com.spring.mvc.base.domain.post.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.spring.mvc.base.common.utils.MarkdownImageExtractor;
 import com.spring.mvc.base.config.annotation.UnitTest;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

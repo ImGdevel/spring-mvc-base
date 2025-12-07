@@ -17,7 +17,7 @@ import com.spring.mvc.base.domain.post.dto.PostSummaryQueryDto;
 import com.spring.mvc.base.domain.post.entity.Post;
 import com.spring.mvc.base.domain.post.repository.PostLikeRepository;
 import com.spring.mvc.base.domain.post.repository.PostRepository;
-import com.spring.mvc.base.domain.post.util.MarkdownImageExtractor;
+import com.spring.mvc.base.common.utils.MarkdownImageExtractor;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

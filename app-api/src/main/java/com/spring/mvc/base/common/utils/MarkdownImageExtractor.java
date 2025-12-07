@@ -1,4 +1,4 @@
-package com.spring.mvc.base.domain.post.util;
+package com.spring.mvc.base.common.utils;
 
 import java.util.ArrayList;
 import java.util.List;
