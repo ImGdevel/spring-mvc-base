@@ -1,4 +1,4 @@
-package com.spring.mvc.base.application.security.config.properties;
+package com.spring.mvc.base.infra.redis.config;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,17 +13,14 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 @Component
 @Validated
-@ConfigurationProperties(prefix = "spring.security.jwt")
-public class JwtProperties {
+@ConfigurationProperties(prefix = "spring.data.redis")
+public class RedisProperties {
 
     @NotBlank
-    private String secret;
+    private String host;
 
     @NotNull
     @Positive
-    private Long accessTokenExpiration;
-
-    @NotNull
-    @Positive
-    private Long refreshTokenExpiration;
+    private Integer port;
 }
+
