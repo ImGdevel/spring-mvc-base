@@ -170,3 +170,119 @@
     - 스케줄러용 예외 처리 로직
     를 별도로 정의해 로깅/알림을 붙이는 것을 권장한다.
 
+---
+
+## 7. 환경 설정 누락/옵션 설정에 대한 정책
+
+### 체크리스트
+
+- [ ] prod 환경에서 반드시 존재해야 하는 설정(DB, Redis, Security 등)에 대해 “부팅 실패” 정책이 적용되어 있는가?
+- [ ] dev/local 환경에서 편의를 위한 기본값과, prod에서 강제되는 필수값이 명확히 분리되어 있는가?
+- [ ] 구조화된 설정(`@ConfigurationProperties`) 중 “필수 설정”과 “선택 설정”의 구분 및 검증 정책이 정의되어 있는가?
+- [ ] 중요도가 낮은 모듈(Webhook, 알림 등)에 대해, 설정 누락 시의 동작(비활성화/기본값 사용/경고 로그)이 문서화되어 있는가?
+
+### 권장 방안
+
+#### 7.1 프로필별(application.yml vs application-prod.yml) 설정 강제
+
+- **prod에서는 설정이 없으면 애플리케이션이 부팅 실패해야 한다.**
+  - 예: `application-prod.yml`에서 placeholder 강제 사용
+  - 예시:
+    ```yaml
+    spring:
+      datasource:
+        url: ${DB_URL:?DB_URL must be set}
+        username: ${DB_USERNAME:?DB_USERNAME must be set}
+        password: ${DB_PASSWORD:?DB_PASSWORD must be set}
+
+      data:
+        redis:
+          host: ${REDIS_HOST:?REDIS_HOST must be set}
+          port: ${REDIS_PORT:?REDIS_PORT must be set}
+    ```
+  - `${ENV:?message}` 문법을 사용하면 해당 값이 없을 때 부팅 시점에 즉시 예외가 발생한다.
+  - 이때 `message` 부분을 최대한 친절하게 작성하면, 로그만 보고도 원인을 바로 파악할 수 있다.
+    - 예: `${DB_URL:?[prod] DB_URL 환경 변수가 설정되지 않아 서버를 시작할 수 없습니다.}`
+- **dev/local에서는 개발 편의를 위해 기본값 허용**
+  - 예: `application.yml`에서 기본값 정의
+    ```yaml
+    spring:
+      data:
+        redis:
+          host: ${REDIS_HOST:localhost}
+          port: ${REDIS_PORT:6379}
+    ```
+  - 개발/로컬 환경에서는 값이 없어도 동작하지만, prod에서는 반드시 채워 넣어야 한다.
+
+#### 7.2 구조화된(중요도 높은) 설정에 대한 검증
+
+- DB, Redis, Security(JWT, CORS 등)처럼 **없으면 애플리케이션이 제대로 동작할 수 없는 설정**은 `@ConfigurationProperties + @Validated`로 관리한다.
+- 예시 (JWT 설정):
+  ```java
+  @Getter
+  @Setter
+  @Component
+  @Validated
+  @ConfigurationProperties(prefix = "spring.security.jwt")
+  public class JwtProperties {
+
+      @NotBlank
+      private String secret;
+
+      @NotNull @Positive
+      private Long accessTokenExpiration;
+
+      @NotNull @Positive
+      private Long refreshTokenExpiration;
+  }
+  ```
+- 값이 비어 있거나 범위가 잘못된 경우, 컨텍스트 초기화 단계에서 바인딩 예외가 발생하고 서버가 부팅되지 않는다.
+- 필요하다면 Bean Validation 애너테이션에 `message`를 지정하거나, 메시지 프로퍼티를 통해 보다 이해하기 쉬운 한글 에러 메시지를 노출할 수 있다.
+- 같은 패턴으로 DB/Redis 설정도 `DataSourceProperties`, `RedisProperties` 등으로 묶어 필수값을 검증할 수 있다.
+
+#### 7.3 중요도 낮은 설정(옵션 모듈)에 대한 처리
+
+- Webhook, 알림, 부가 모듈 등 **“있으면 좋은” 수준의 기능**은 다음 원칙을 따른다.
+  - 애플리케이션 부팅은 허용하되, 설정 누락 시:
+    - 명확한 경고 로그 출력
+    - 모듈 비활성화 또는 기본값 사용
+- 예: Webhook 모듈
+  ```java
+  @ConfigurationProperties(prefix = "notify.webhook")
+  public class WebhookProperties {
+      private boolean enabled = false;
+      private String url; // 없어도 됨
+  }
+  ```
+
+  ```java
+  @Configuration
+  public class WebhookConfig {
+
+      private static final Logger log = LoggerFactory.getLogger(WebhookConfig.class);
+
+      @Bean
+      @ConditionalOnProperty(prefix = "notify.webhook", name = "enabled", havingValue = "true")
+      public WebhookClient webhookClient(WebhookProperties props) {
+          if (props.getUrl() == null || props.getUrl().isBlank()) {
+              log.warn("Webhook 설정이 존재하지 않습니다. Webhook 모듈이 비활성화됩니다.");
+              return new NoOpWebhookClient();
+          }
+          return new RealWebhookClient(props.getUrl());
+      }
+  }
+  ```
+- 비동기/배치 모듈의 경우:
+  - 설정이 없을 때에는 `log.warn("XX 설정이 없습니다. 기본값 OO를 사용합니다.")` 형태로 경고를 남기고 기본값으로 동작하게 한다.
+  - 정말로 설정이 필수라면 7.2의 “부팅 실패” 정책을 따르고, 그렇지 않다면 “경고 + 비활성/기본값” 패턴을 선택한다.
+
+#### 7.4 요약 정책
+
+- **prod + 필수 설정(DB, Redis, Security 등)**  
+  - 설정이 없으면 부팅 실패 (placeholder 강제, `@ConfigurationProperties + @Validated`).
+- **dev/local + 필수 설정**  
+  - 개발 편의를 위해 적당한 기본값 허용, 필요 시 prod와 별도로 관리.
+- **선택 설정(Webhook, 알림 등 중요도 낮은 모듈)**  
+  - 설정 누락 시 애플리케이션은 실행되며:
+    - 모듈 비활성화 또는 안전한 기본값으로 동작
+    - 경고/정보 로그로 현재 상태를 명확히 알린다.
