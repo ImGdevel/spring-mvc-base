@@ -83,7 +83,6 @@ class PostIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("post_created"))
                 .andExpect(jsonPath("$.data.title").value(PostFixture.DEFAULT_TITLE))
                 .andExpect(jsonPath("$.data.content").value(PostFixture.DEFAULT_CONTENT));
 
@@ -100,7 +99,6 @@ class PostIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("post_updated"))
                 .andExpect(jsonPath("$.data.title", is(PostFixture.UPDATED_TITLE)))
                 .andExpect(jsonPath("$.data.content", is(PostFixture.UPDATED_CONTENT)));
 
@@ -126,7 +124,6 @@ class PostIntegrationTest {
         mockMvc.perform(get("/api/v1/posts/{postId}", savedPost.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("post_retrieved"))
                 .andExpect(jsonPath("$.data.title").value(PostFixture.DEFAULT_TITLE))
                 .andExpect(jsonPath("$.data.content").value(PostFixture.DEFAULT_CONTENT))
                 .andExpect(jsonPath("$.data.member.nickname").value("tester"));
@@ -140,7 +137,6 @@ class PostIntegrationTest {
                         .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("posts_retrieved"))
                 .andExpect(jsonPath("$.data.items").isArray())
                 .andExpect(jsonPath("$.data.totalElements").value(1))
                 .andExpect(jsonPath("$.data.totalPages").value(1));

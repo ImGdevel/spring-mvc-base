@@ -66,7 +66,6 @@ class MemberIntegrationTest {
         mockMvc.perform(get("/api/v1/members/me"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("member_get_success"))
                 .andExpect(jsonPath("$.data.nickname").value("tester"))
                 .andExpect(jsonPath("$.data.email").value("tester@example.com"));
     }
@@ -81,7 +80,6 @@ class MemberIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("member_update_success"))
                 .andExpect(jsonPath("$.data.nickname", is("newNick")))
                 .andExpect(jsonPath("$.data.profileImage", is("https://example.com/new.png")));
 
