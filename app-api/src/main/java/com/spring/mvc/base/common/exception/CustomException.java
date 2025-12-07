@@ -22,7 +22,4 @@ public class CustomException extends RuntimeException {
         return this.errorCode.getHttpStatus();
     }
 
-    public ErrorCode getErrorCode(){
-        return this.errorCode;
-    }
 }

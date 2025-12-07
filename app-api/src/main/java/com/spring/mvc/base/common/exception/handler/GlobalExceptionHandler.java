@@ -6,7 +6,6 @@ import com.spring.mvc.base.common.exception.CustomException;
 import com.spring.mvc.base.common.exception.ErrorCode;
 import com.spring.mvc.base.common.exception.http.ConflictException;
 import com.spring.mvc.base.common.exception.http.ForbiddenException;
-import com.spring.mvc.base.common.exception.http.HttpException;
 import com.spring.mvc.base.common.exception.http.InvalidRequestException;
 import com.spring.mvc.base.common.exception.http.NotFoundException;
 import com.spring.mvc.base.common.exception.http.UnauthorizedException;
@@ -14,6 +13,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -69,14 +69,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidRequestException(InvalidRequestException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error("[InvalidRequestException] {} - {}", errorCode.name(), e.getMessage(), e);
-        ErrorResponse response = ErrorResponse.from(errorCode);
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
-    }
-
-    @ExceptionHandler(HttpException.class)
-    public ResponseEntity<ErrorResponse> handleHttpException(HttpException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        log.error("[HttpException] {} - {}", errorCode.name(), e.getMessage(), e);
         ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }
