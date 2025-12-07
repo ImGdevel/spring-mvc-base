@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mvc.base.application.auth.SignupRequestFixture;
 import com.spring.mvc.base.application.member.dto.request.SignupRequest;
 import com.spring.mvc.base.application.security.dto.response.LoginResponse;
@@ -20,7 +21,6 @@ import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.MemberErrorCode;
 import com.spring.mvc.base.config.annotation.ControllerWebMvcTest;
 import com.spring.mvc.base.domain.member.repository.MemberRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mvc.base.application.post.PostRequestFixture;
 import com.spring.mvc.base.application.post.dto.request.PostCreateRequest;
 import com.spring.mvc.base.application.post.dto.request.PostUpdateRequest;
@@ -20,7 +21,6 @@ import com.spring.mvc.base.domain.post.PostFixture;
 import com.spring.mvc.base.domain.post.entity.Post;
 import com.spring.mvc.base.domain.post.repository.PostLikeRepository;
 import com.spring.mvc.base.domain.post.repository.PostRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

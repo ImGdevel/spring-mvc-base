@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mvc.base.application.common.dto.response.PageResponse;
 import com.spring.mvc.base.application.member.dto.response.MemberResponse;
 import com.spring.mvc.base.application.post.PostRequestFixture;
@@ -24,7 +25,6 @@ import com.spring.mvc.base.application.post.service.PostViewService;
 import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.PostErrorCode;
 import com.spring.mvc.base.config.annotation.ControllerWebMvcTest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

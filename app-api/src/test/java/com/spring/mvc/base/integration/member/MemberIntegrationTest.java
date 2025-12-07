@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mvc.base.application.member.MemberRequestFixture;
 import com.spring.mvc.base.application.member.dto.request.MemberUpdateRequest;
 import com.spring.mvc.base.application.member.dto.request.PasswordUpdateRequest;
@@ -16,7 +17,6 @@ import com.spring.mvc.base.domain.member.MemberFixture;
 import com.spring.mvc.base.domain.member.entity.Member;
 import com.spring.mvc.base.domain.member.entity.MemberStatus;
 import com.spring.mvc.base.domain.member.repository.MemberRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

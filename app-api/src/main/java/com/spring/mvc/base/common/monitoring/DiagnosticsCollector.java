@@ -2,7 +2,6 @@ package com.spring.mvc.base.common.monitoring;
 
 import com.spring.mvc.base.infra.redis.config.RedisProperties;
 import com.zaxxer.hikari.HikariDataSource;
-import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;

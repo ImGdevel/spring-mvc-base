@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mvc.base.application.file.FileRequestFixture;
 import com.spring.mvc.base.application.file.dto.request.FileCreateRequest;
 import com.spring.mvc.base.application.file.dto.response.FileResponse;
@@ -20,7 +21,6 @@ import com.spring.mvc.base.common.exception.code.FileErrorCode;
 import com.spring.mvc.base.config.annotation.ControllerWebMvcTest;
 import com.spring.mvc.base.domain.file.FileFixture;
 import com.spring.mvc.base.domain.file.entity.File;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

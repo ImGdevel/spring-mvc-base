@@ -8,21 +8,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mvc.base.application.comment.CommentRequestFixture;
 import com.spring.mvc.base.application.comment.dto.request.CommentCreateRequest;
 import com.spring.mvc.base.application.comment.dto.request.CommentUpdateRequest;
 import com.spring.mvc.base.config.TestCurrentUserContext;
 import com.spring.mvc.base.config.annotation.IntegrationTest;
+import com.spring.mvc.base.domain.comment.entity.Comment;
+import com.spring.mvc.base.domain.comment.repository.CommentRepository;
 import com.spring.mvc.base.domain.member.MemberFixture;
 import com.spring.mvc.base.domain.member.entity.Member;
 import com.spring.mvc.base.domain.member.repository.MemberRepository;
 import com.spring.mvc.base.domain.post.CommentFixture;
 import com.spring.mvc.base.domain.post.PostFixture;
-import com.spring.mvc.base.domain.comment.entity.Comment;
 import com.spring.mvc.base.domain.post.entity.Post;
-import com.spring.mvc.base.domain.comment.repository.CommentRepository;
 import com.spring.mvc.base.domain.post.repository.PostRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

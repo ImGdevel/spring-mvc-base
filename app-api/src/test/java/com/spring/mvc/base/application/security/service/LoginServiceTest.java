@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
+import com.spring.mvc.base.application.security.dto.user.CustomUserDetails;
 import com.spring.mvc.base.config.annotation.UnitTest;
 import com.spring.mvc.base.domain.member.MemberFixture;
 import com.spring.mvc.base.domain.member.entity.Member;
 import com.spring.mvc.base.domain.member.repository.MemberRepository;
-import com.spring.mvc.base.application.security.dto.user.CustomUserDetails;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

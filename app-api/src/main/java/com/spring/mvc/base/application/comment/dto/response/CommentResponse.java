@@ -1,9 +1,9 @@
 package com.spring.mvc.base.application.comment.dto.response;
 
 import com.spring.mvc.base.application.member.dto.response.MemberResponse;
-import com.spring.mvc.base.domain.member.entity.Member;
 import com.spring.mvc.base.domain.comment.dto.CommentQueryDto;
 import com.spring.mvc.base.domain.comment.entity.Comment;
+import com.spring.mvc.base.domain.member.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 

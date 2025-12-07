@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mvc.base.application.comment.CommentRequestFixture;
 import com.spring.mvc.base.application.comment.dto.request.CommentCreateRequest;
 import com.spring.mvc.base.application.comment.dto.request.CommentUpdateRequest;
@@ -21,7 +22,6 @@ import com.spring.mvc.base.application.member.dto.response.MemberResponse;
 import com.spring.mvc.base.common.exception.BusinessException;
 import com.spring.mvc.base.common.exception.code.CommentErrorCode;
 import com.spring.mvc.base.config.annotation.ControllerWebMvcTest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

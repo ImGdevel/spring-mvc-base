@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mvc.base.application.file.dto.request.CompleteUploadRequest;
 import com.spring.mvc.base.application.file.dto.request.PresignRequest;
 import com.spring.mvc.base.config.annotation.IntegrationTest;
@@ -14,7 +15,6 @@ import com.spring.mvc.base.domain.file.entity.File;
 import com.spring.mvc.base.domain.file.entity.FileStatus;
 import com.spring.mvc.base.domain.file.entity.FileType;
 import com.spring.mvc.base.domain.file.repository.FileRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
