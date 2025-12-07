@@ -1,18 +1,9 @@
 package com.spring.mvc.base.common.monitoring;
 
-import com.spring.mvc.base.infra.redis.config.RedisProperties;
-import com.zaxxer.hikari.HikariDataSource;
-import java.lang.management.GarbageCollectorMXBean;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
-import java.lang.management.ThreadMXBean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -20,84 +11,58 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StartupDiagnosticsLogger {
 
-    private final Environment environment;
-    private final ObjectProvider<HikariDataSource> dataSourceProvider;
-    private final ObjectProvider<RedisProperties> redisPropertiesProvider;
+    private final DiagnosticsCollector diagnosticsCollector;
 
     @EventListener(ApplicationReadyEvent.class)
     public void logStartupDiagnostics() {
+        DiagnosticsContext context = diagnosticsCollector.collectAll();
+
         log.info("====== Application Startup Diagnostics ======");
-        logProfiles();
-        logJvmAndMemory();
-        logThreads();
-        logGarbageCollectors();
-        logDataSource();
-        logRedis();
-        log.info("====== Application Startup Diagnostics End ======");
-    }
 
-    private void logProfiles() {
-        String[] activeProfiles = environment.getActiveProfiles();
-        log.info("Active profiles: {}", (Object) activeProfiles);
-    }
+        log.info("Active profiles: {}", (Object) context.getActiveProfiles());
 
-    private void logJvmAndMemory() {
-        Runtime runtime = Runtime.getRuntime();
-        MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
-        MemoryUsage heap = memoryBean.getHeapMemoryUsage();
-
-        log.info("JVM: {}, version: {}", System.getProperty("java.vm.name"), System.getProperty("java.version"));
-        log.info("Processors: {}", runtime.availableProcessors());
+        DiagnosticsContext.JvmMemoryInfo jvm = context.getJvmMemoryInfo();
+        log.info("JVM: {}, version: {}", jvm.getVmName(), jvm.getJavaVersion());
+        log.info("Processors: {}", jvm.getProcessors());
         log.info("Heap memory (init/used/max) MB: {}/{}/{}",
-                toMb(heap.getInit()),
-                toMb(heap.getUsed()),
-                toMb(heap.getMax()));
-    }
+                jvm.getHeapInitMb(),
+                jvm.getHeapUsedMb(),
+                jvm.getHeapMaxMb());
 
-    private void logThreads() {
-        ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+        DiagnosticsContext.ThreadInfo threads = context.getThreadInfo();
         log.info("Threads: current={}, peak={}, daemon={}",
-                threadBean.getThreadCount(),
-                threadBean.getPeakThreadCount(),
-                threadBean.getDaemonThreadCount());
-    }
+                threads.getCurrent(),
+                threads.getPeak(),
+                threads.getDaemon());
 
-    private void logGarbageCollectors() {
-        for (GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
+        for (DiagnosticsContext.GcInfo gc : context.getGcInfos()) {
             log.info("GC: name={}, collections={}, timeMs={}",
                     gc.getName(),
                     gc.getCollectionCount(),
-                    gc.getCollectionTime());
+                    gc.getCollectionTimeMs());
         }
-    }
 
-    private void logDataSource() {
-        HikariDataSource dataSource = dataSourceProvider.getIfAvailable();
-        if (dataSource == null) {
+        DiagnosticsContext.DataSourceInfo ds = context.getDataSourceInfo();
+        if (ds != null) {
+            log.info("HikariCP pool: name={}, minIdle={}, maxPoolSize={}, connectionTimeoutMs={}, idleTimeoutMs={}, maxLifetimeMs={}",
+                    ds.getPoolName(),
+                    ds.getMinIdle(),
+                    ds.getMaxPoolSize(),
+                    ds.getConnectionTimeoutMs(),
+                    ds.getIdleTimeoutMs(),
+                    ds.getMaxLifetimeMs());
+        } else {
             log.info("DataSource: HikariDataSource not available");
-            return;
         }
 
-        log.info("HikariCP pool: name={}, minIdle={}, maxPoolSize={}, connectionTimeoutMs={}, idleTimeoutMs={}, maxLifetimeMs={}",
-                dataSource.getPoolName(),
-                dataSource.getMinimumIdle(),
-                dataSource.getMaximumPoolSize(),
-                dataSource.getConnectionTimeout(),
-                dataSource.getIdleTimeout(),
-                dataSource.getMaxLifetime());
-    }
-
-    private void logRedis() {
-        RedisProperties redisProperties = redisPropertiesProvider.getIfAvailable();
-        if (redisProperties == null) {
+        DiagnosticsContext.RedisInfo redis = context.getRedisInfo();
+        if (redis != null) {
+            log.info("Redis: host={}, port={}", redis.getHost(), redis.getPort());
+        } else {
             log.info("Redis: RedisProperties not available");
-            return;
         }
-        log.info("Redis: host={}, port={}", redisProperties.getHost(), redisProperties.getPort());
-    }
 
-    private long toMb(long bytes) {
-        return bytes <= 0 ? -1 : bytes / (1024 * 1024);
+        log.info("====== Application Startup Diagnostics End ======");
     }
 }
 
